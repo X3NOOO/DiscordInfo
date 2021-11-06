@@ -102,18 +102,10 @@ def makeRequest(token):
         'zh-TW' : 'Taiwan',
         'ko'    : 'Korea'
     }
-    #debug.Info(f"{info_general=}")
-    #uid = info_general["id"]
-    #debug.Info(f"{uid=}")
-    #aid = info_general["avatar"]
-    #debug.Info(f"{aid=}")
-    #avatar = f"https://cdn.discordapp.com/avatars/{uid}/{aid}.gif"
-    #friends = loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/relationships", headers=headers)).read().#decode())
-    #debug.Info(f"{friends=}")
-    #channels = loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/channels", headers=headers)).read().decode())
-    #debug.Info(f"{channels=}")
-    #has_payments = bool(len(loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/billing/payment-sources", #headers=headers)).read().decode())) > 0)
-    #debug.Info(f"{has_payments=}")
+    friends = loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/relationships", headers=headers)).read().decode())
+    debug.Info(f"{friends=}")
+    channels = loads(urlopen(Request("https://discordapp.com/api/v6/users/@me/channels", headers=headers)).read().decode())
+    debug.Info(f"{channels=}")
     ## format info
     user_name = info_general["username"]
     debug.Info(f"{user_name=}")
@@ -205,6 +197,7 @@ def makeRequest(token):
     basicTable.add_row("Email", email)
     basicTable.add_row("Phone", phone)
     basicTable.add_row("Token", token)
+    basicTable.add_row("Creation date", creation_date)
     basicTable.add_row("Locale", locale)
     basicTable.add_row("Language", lang)
     basicTable.add_row("Avatar id", avatar_id)
@@ -248,6 +241,15 @@ def makeRequest(token):
                 if i < len(billing_info) - 1:
                     print(f'{Fore.RESET}\n')
         print(f'{Fore.RESET}\n')
+    
+    print("Saved friends to ./friends.log")
+    with open("friends.log", 'w') as f:
+        f.write(friends)
+        f.close
+    print("Saved channels to ./channels.log")
+    with open("channels.log", 'w') as f:
+        f.write(channels)
+        f.close
 
     
 def main():
