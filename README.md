@@ -1,3 +1,6 @@
+## DiscordInfo
+DiscordInfo is tool for displaying all possible informations based on discord token
+
 ## IMPORTANT
 I, the creator, am not responsible for any actions, and or damages, caused by this software.
 
