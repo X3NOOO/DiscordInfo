@@ -1,8 +1,8 @@
 #!/bin/python3
 # pylint: disable=missing-function-docstring, missing-class-docstring
 
-#DiscordInfo
-#Copyright (C) X3NO (https://github.com/X3NOOO/DiscordInfo)
+#DiscordInfo (https://github.com/X3NOOO/DiscordInfo)
+#Copyright (C) X3NO [X3NO@disroot.org] 
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ from base64 import b64decode
 from json import loads, dumps
 import requests
 
-DEBUG = bool(True)
+DEBUG = bool(False)
 
 class debug:
     RichConsole = Console()
@@ -58,7 +58,7 @@ def welcomeScreen():
    ░     ░        ░  ░ ░          ░ ░     ░        ░        ░           ░            ░ ░  
  ░                   ░                           ░                                        
 """
-    print(ascii_art  + "By X3NO (https://github.com/X3NOOO")
+    print(ascii_art  + "By X3NO (https://github.com/X3NOOO)")
 
 def makeRequest(token):
     debug.Info("makeRequest")
@@ -70,7 +70,7 @@ def makeRequest(token):
     try:
         info_general = loads(urlopen(Request("https://discordapp.com/api/v6/users/@me", headers=headers)).read().decode())
     except Exception as e:
-        debug.Error(e)
+        debug.Error(str(e))
     
     lg_codes = {
         'da'    : 'Denmark',
@@ -109,10 +109,10 @@ def makeRequest(token):
     ## format info
     user_name = info_general["username"]
     debug.Info(f"{user_name=}")
-    user_id = info_general["id"]
-    debug.Info(f"{user_id=}")
-    avatar_id = info_general["avatar"]
-    avatar_url = f"https://cdn.discordapp.com/avatars/{user_id}/{avatar_id}.(png,jpg,gif)"
+    uid = info_general["id"]
+    debug.Info(f"{uid=}")
+    avid = info_general["avatar"]
+    av_url = f"https://cdn.discordapp.com/avatars/{uid}/{avid}.(png,jpg,gif)"
     phone = info_general["phone"]
     debug.Info(f"{phone=}")
     email = info_general["email"]
@@ -127,7 +127,7 @@ def makeRequest(token):
     debug.Info(f"{verified=}")
     lang = lg_codes.get(locale)
     debug.Info(f"{lang=}")
-    creation_date = datetime.utcfromtimestamp(((int(user_id) >> 22) + 1420070400000) / 1000).strftime('%d-%m-%Y %H:%M:%S')
+    creation_date = datetime.utcfromtimestamp(((int(uid) >> 22) + 1420070400000) / 1000).strftime('%d-%m-%Y %H:%M:%S')
     nitro_data = (requests.get('https://discordapp.com/api/v6/users/@me/billing/subscriptions', headers=headers)).json()
     has_nitro = bool(len(nitro_data) > 0)
     if has_nitro:
@@ -135,7 +135,7 @@ def makeRequest(token):
         d2 = datetime.strptime(nitro_data[0]["current_period_start"].split('.')[0], "%Y-%m-%dT%H:%M:%S")
         nitro_days_left = abs((d2 - d1).days)
 
-    # billing info - copied from https://github.com/wodxgod/DTI/blob/master/DTI.py
+    # billing info - by wodxgod https://github.com/wodxgod/DTI/blob/master/DTI.py
     billing_info = []
     for x in requests.get('https://discordapp.com/api/v6/users/@me/billing/payment-sources', headers=headers).json():
         y = x['billing_address']
@@ -190,57 +190,61 @@ def makeRequest(token):
     ## display info
     RichConsole=Console()
     basicTable=Table(title="\nBasic information", show_header=True, show_edge=False, show_lines=True, width=120)
-    basicTable.add_column("Name", justify="center")
-    basicTable.add_column("Value", justify="center")
+    basicTable.add_column("Name", justify="left")
+    basicTable.add_column("Value", justify="left")
     basicTable.add_row("User Name", user_name)
-    basicTable.add_row("User ID", user_id)
+    basicTable.add_row("User ID", uid)
     basicTable.add_row("Email", email)
     basicTable.add_row("Phone", phone)
     basicTable.add_row("Token", token)
     basicTable.add_row("Creation date", creation_date)
     basicTable.add_row("Locale", locale)
     basicTable.add_row("Language", lang)
-    basicTable.add_row("Avatar id", avatar_id)
-    basicTable.add_row("Avatar url", avatar_url)
+    basicTable.add_row("Avatar id", avid)
+    basicTable.add_row("Avatar url", av_url)
     RichConsole.print(basicTable)
     
     nitroTable=Table(title="\nNitro information", show_header=True, show_edge=False, show_lines=True, width=120)
-    nitroTable.add_column("Name", justify="center")
-    nitroTable.add_column("Value", justify="center")
+    nitroTable.add_column("Name", justify="left")
+    nitroTable.add_column("Value", justify="left")
     nitroTable.add_row("Has nitro", str(has_nitro))
     if has_nitro:
         nitroTable.add_row("Expires in", nitro_days_left)
     RichConsole.print(nitroTable)
     
     securityTable=Table(title="\nSecurity information", show_header=True, show_edge=False, show_lines=True, width=120)
-    securityTable.add_column("Name", justify="center")
-    securityTable.add_column("Value", justify="center")
+    securityTable.add_column("Name", justify="left")
+    securityTable.add_column("Value", justify="left")
     securityTable.add_row("MFA enabled", str(mfa_enabled))
     securityTable.add_row("Flags", str(flags))
     securityTable.add_row("Email verified", str(verified))
     RichConsole.print(securityTable)
 
     if len(billing_info) > 0:
-        print('Billing Information')
-        print('-------------------')
+        billingTable=Table(title="\nBilling info", show_header=True, show_edge=False, show_lines=True, width=120)
+        billingTable.add_column("Name", justify="left")
+        billingTable.add_column("Value", justify="left")
         if len(billing_info) == 1:
             for x in billing_info:
                 for key, val in x.items():
                     if not val:
                         continue
-                    print(Fore.RESET + '    {:<23}{}{}'.format(key, Fore.CYAN, val))
+                    billingTable.add_row(key, val)
         else:
             for i, x in enumerate(billing_info):
-                title = f'Payment Method #{i + 1} ({x["Payment Type"]})'
-                print('    ' + title)
-                print('    ' + ('=' * len(title)))
+                #title = f'Payment Method #{i + 1} ({x["Payment Type"]})'
+                billingTable.add_row(f"Payment Method #{i + 1}", f'{x["Payment Type"]}')
+                #print('    ' + title)
+                #print('    ' + ('=' * len(title)))
                 for j, (key, val) in enumerate(x.items()):
                     if not val or j == 0:
                         continue
-                    print(Fore.RESET + '        {:<23}{}{}'.format(key, Fore.CYAN, val))
+                    #print(Fore.RESET + '        {:<23}{}{}'.format(key, Fore.CYAN, val))
+                    billingTable.add_row(key, val)
                 if i < len(billing_info) - 1:
                     print(f'{Fore.RESET}\n')
         print(f'{Fore.RESET}\n')
+        RichConsole.print(billingTable)
     
     print("Saved friends to ./friends.log")
     with open("friends.log", 'w') as f:
@@ -256,7 +260,7 @@ def main():
     debug.Info("main")
     welcomeScreen()
 
-    if str(input("This software was created for educational purposes only, by using it you automatically agree not to use it for any other purpose. Do you understand? (yes/no):")) == "yes":
+    if str(input("This software was created for educational purposes only, by using it you automatically agree not to use it for any other purpose. Do you understand? (yes/no): ")) == "yes":
         token = str(input("Enter token: "))
         debug.Info(f"{token=}")
         makeRequest(token)
