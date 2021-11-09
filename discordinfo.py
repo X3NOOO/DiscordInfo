@@ -110,7 +110,7 @@ def makeRequest(token):
     uid = info_general["id"]
     debug.Info(f"{uid=}")
     avid = info_general["avatar"]
-    av_url = f"https://cdn.discordapp.com/avatars/{uid}/{avid}.(png,jpg,gif)"
+    av_url = f"https://cdn.discordapp.com/avatars/{uid}/{avid}"
     phone = info_general["phone"]
     debug.Info(f"{phone=}")
     email = info_general["email"]
@@ -269,13 +269,13 @@ def makeRequest(token):
         RichConsole.print(billingTable)
     
     #TODO Format friends and channels output
-    print("Saved friends to ./friends.log")
+    print("\nSaved friends to ./friends.log")
     with open("friends.log", 'w') as f:
-        f.write(friends)
+        f.write(str(friends))
         f.close
-    print("Saved channels to ./channels.log")
+    print("\nSaved channels to ./channels.log")
     with open("channels.log", 'w') as f:
-        f.write(channels)
+        f.write(str(channels))
         f.close
 
     
