@@ -1,6 +1,4 @@
 #!/bin/python3
-# pylint: disable=missing-function-docstring, missing-class-docstring
-
 #DiscordInfo (https://github.com/X3NOOO/DiscordInfo)
 #Copyright (C) X3NO [X3NO@disroot.org] 
 #
@@ -21,9 +19,9 @@ from urllib.request import Request, urlopen
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
-from base64 import b64decode
-from json import loads, dumps
+from json import loads
 import requests
+#from base64 import b64decode
 
 DEBUG = bool(False)
 
@@ -125,6 +123,19 @@ def makeRequest(token):
     debug.Info(f"{locale=}")
     verified = info_general['verified']
     debug.Info(f"{verified=}")
+    nsfw_allowed = info_general['nsfw_allowed']
+    debug.Info(f"{nsfw_allowed=}")
+    discriminator = info_general['discriminator']
+    debug.Info(f"{discriminator=}")
+    # visuals
+    bio = info_general['bio']
+    debug.Info(f"{bio=}")
+    banner = info_general['banner']
+    debug.Info(f"{banner=}")
+    banner_color = info_general['banner_color']
+    debug.Info(f"{banner=}")
+    accent_color = info_general['accent_color']
+    debug.Info(f"{accent_color=}")
     lang = lg_codes.get(locale)
     debug.Info(f"{lang=}")
     creation_date = datetime.utcfromtimestamp(((int(uid) >> 22) + 1420070400000) / 1000).strftime('%d-%m-%Y %H:%M:%S')
@@ -202,6 +213,7 @@ def makeRequest(token):
     basicTable.add_row("Language", lang)
     basicTable.add_row("Avatar id", avid)
     basicTable.add_row("Avatar url", av_url)
+    basicTable.add_row("Discriminator", discriminator)
     RichConsole.print(basicTable)
     
     nitroTable=Table(title="\nNitro information", show_header=True, show_edge=False, show_lines=True, width=120)
@@ -212,12 +224,22 @@ def makeRequest(token):
         nitroTable.add_row("Expires in", nitro_days_left)
     RichConsole.print(nitroTable)
     
+    visualsTable=Table(title="\nVisuals information", show_header=True, show_edge=False, show_lines=True, width=120)
+    visualsTable.add_column("Name", justify="left")
+    visualsTable.add_column("Value", justify="left")
+    visualsTable.add_row("Bio", bio)
+    visualsTable.add_row("Banner", banner)
+    visualsTable.add_row("Banner color", banner_color)
+    visualsTable.add_row("Accent color", accent_color)
+    RichConsole.print(visualsTable)
+    
     securityTable=Table(title="\nSecurity information", show_header=True, show_edge=False, show_lines=True, width=120)
     securityTable.add_column("Name", justify="left")
     securityTable.add_column("Value", justify="left")
     securityTable.add_row("MFA enabled", str(mfa_enabled))
     securityTable.add_row("Flags", str(flags))
     securityTable.add_row("Email verified", str(verified))
+    securityTable.add_row("NSFW allowed", str(nsfw_allowed))
     RichConsole.print(securityTable)
 
     if len(billing_info) > 0:
@@ -246,6 +268,7 @@ def makeRequest(token):
         print(f'{Fore.RESET}\n')
         RichConsole.print(billingTable)
     
+    #TODO Format friends and channels output
     print("Saved friends to ./friends.log")
     with open("friends.log", 'w') as f:
         f.write(friends)

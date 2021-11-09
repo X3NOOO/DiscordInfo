@@ -1,5 +1,13 @@
 ## DiscordInfo
-DiscordInfo is tool for displaying all possible informations based on discord token
+DiscordInfo is tool for displaying all possible informations that can be extracted from discord token
+
+
+## Usage
+1. `git clone https://github.com/X3NOOO/DiscordInfo`
+2. `cd ./DiscordInfo`
+3. `pip3 install -r requirements.txt`
+4. `python3 discordinfo.py`
+
 
 ## IMPORTANT
 I, the creator, am not responsible for any actions, and or damages, caused by this software.
