@@ -20,10 +20,11 @@ from rich.console import Console
 from rich.table import Table
 from datetime import datetime
 from json import loads
+import pprint
 import requests
 #from base64 import b64decode
 
-DEBUG = bool(False)
+DEBUG = bool(True)
 
 class debug:
     RichConsole = Console()
@@ -107,34 +108,34 @@ def makeRequest(token):
     ## format info
     user_name = info_general["username"]
     debug.Info(f"{user_name=}")
-    uid = info_general["id"]
+    uid = str(info_general["id"])
     debug.Info(f"{uid=}")
     avid = info_general["avatar"]
     av_url = f"https://cdn.discordapp.com/avatars/{uid}/{avid}"
-    phone = info_general["phone"]
+    phone = str(info_general["phone"])
     debug.Info(f"{phone=}")
     email = info_general["email"]
     debug.Info(f"{email=}")
-    mfa_enabled = info_general['mfa_enabled']
+    mfa_enabled = str(info_general['mfa_enabled'])
     debug.Info(f"{mfa_enabled=}")
-    flags = info_general['flags']
+    flags = str(info_general['flags'])
     debug.Info(f"{flags=}")
     locale = info_general['locale']
     debug.Info(f"{locale=}")
-    verified = info_general['verified']
+    verified = str(info_general['verified'])
     debug.Info(f"{verified=}")
-    nsfw_allowed = info_general['nsfw_allowed']
+    nsfw_allowed = str(info_general['nsfw_allowed'])
     debug.Info(f"{nsfw_allowed=}")
-    discriminator = info_general['discriminator']
+    discriminator = str(info_general['discriminator'])
     debug.Info(f"{discriminator=}")
     # visuals
-    bio = info_general['bio']
+    bio = str(info_general['bio'])
     debug.Info(f"{bio=}")
     banner = info_general['banner']
     debug.Info(f"{banner=}")
-    banner_color = info_general['banner_color']
-    debug.Info(f"{banner=}")
-    accent_color = info_general['accent_color']
+    banner_color = str(info_general['banner_color'])
+    debug.Info(f"{banner_color=}")
+    accent_color = str(info_general['accent_color'])
     debug.Info(f"{accent_color=}")
     lang = lg_codes.get(locale)
     debug.Info(f"{lang=}")
@@ -215,15 +216,7 @@ def makeRequest(token):
     basicTable.add_row("Avatar url", av_url)
     basicTable.add_row("Discriminator", discriminator)
     RichConsole.print(basicTable)
-    
-    nitroTable=Table(title="\nNitro information", show_header=True, show_edge=False, show_lines=True, width=120)
-    nitroTable.add_column("Name", justify="left")
-    nitroTable.add_column("Value", justify="left")
-    nitroTable.add_row("Has nitro", str(has_nitro))
-    if has_nitro:
-        nitroTable.add_row("Expires in", nitro_days_left)
-    RichConsole.print(nitroTable)
-    
+        
     visualsTable=Table(title="\nVisuals information", show_header=True, show_edge=False, show_lines=True, width=120)
     visualsTable.add_column("Name", justify="left")
     visualsTable.add_column("Value", justify="left")
@@ -233,13 +226,21 @@ def makeRequest(token):
     visualsTable.add_row("Accent color", accent_color)
     RichConsole.print(visualsTable)
     
+    nitroTable=Table(title="\nNitro information", show_header=True, show_edge=False, show_lines=True, width=120)
+    nitroTable.add_column("Name", justify="left")
+    nitroTable.add_column("Value", justify="left")
+    nitroTable.add_row("Has nitro", str(has_nitro))
+    if has_nitro:
+        nitroTable.add_row("Expires in", nitro_days_left)
+    RichConsole.print(nitroTable)
+    
     securityTable=Table(title="\nSecurity information", show_header=True, show_edge=False, show_lines=True, width=120)
     securityTable.add_column("Name", justify="left")
     securityTable.add_column("Value", justify="left")
-    securityTable.add_row("MFA enabled", str(mfa_enabled))
-    securityTable.add_row("Flags", str(flags))
-    securityTable.add_row("Email verified", str(verified))
-    securityTable.add_row("NSFW allowed", str(nsfw_allowed))
+    securityTable.add_row("MFA enabled", mfa_enabled)
+    securityTable.add_row("Flags", flags)
+    securityTable.add_row("Email verified", verified)
+    securityTable.add_row("NSFW allowed", nsfw_allowed)
     RichConsole.print(securityTable)
 
     if len(billing_info) > 0:
@@ -271,11 +272,11 @@ def makeRequest(token):
     #TODO Format friends and channels output
     print("\nSaved friends to ./friends.log")
     with open("friends.log", 'w') as f:
-        f.write(str(friends))
+        f.write(str(pprint.pprint(friends)))
         f.close
     print("\nSaved channels to ./channels.log")
     with open("channels.log", 'w') as f:
-        f.write(str(channels))
+        f.write(str(pprint.pprint(channels)))
         f.close
 
     
