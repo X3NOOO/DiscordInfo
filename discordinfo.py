@@ -24,7 +24,7 @@ import pprint
 import requests
 #from base64 import b64decode
 
-DEBUG = bool(True)
+DEBUG = bool(False)
 
 class debug:
     RichConsole = Console()
@@ -272,11 +272,11 @@ def makeRequest(token):
     #TODO Format friends and channels output
     print("\nSaved friends to ./friends.log")
     with open("friends.log", 'w') as f:
-        f.write(str(pprint.pprint(friends)))
+        f.write(str(pprint.pformat(friends)))
         f.close
     print("\nSaved channels to ./channels.log")
     with open("channels.log", 'w') as f:
-        f.write(str(pprint.pprint(channels)))
+        f.write(str(pprint.pformat(channels)))
         f.close
 
     
